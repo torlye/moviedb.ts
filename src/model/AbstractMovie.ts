@@ -12,7 +12,7 @@ export abstract class AbstractMovie
         return !isNaN(rating) && Number.isFinite(rating) && rating > 0 && rating <= 10;
     }
 
-    public jmoviedbId : number;
+    public id : number;
     public imdbUrl : string;
     public title:string;
     public title2:string;
@@ -20,7 +20,6 @@ export abstract class AbstractMovie
     public plotoutline: string;
     public tagline: string;
     public runtime: number;
-    public version: string;
     public country: string[];
     public language: string[];
     public genre: string[];

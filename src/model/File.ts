@@ -1,6 +1,6 @@
-import {Release} from './AbstractRelease';
+import {MovieRelease} from './MovieRelease';
 
-class File extends Release
+class File extends MovieRelease
 {
     get format() {
         return "File";

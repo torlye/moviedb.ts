@@ -14,9 +14,12 @@
       "severity": "warning"
     },
     "no-unused-variable": {
-      "severity": "error"
+      "severity": "warning"
     },
     "no-unused-expression": {
+      "severity": "warning"
+    },
+    "no-unused-locals": {
       "severity": "warning"
     },
     "ordered-imports": false,

@@ -1,6 +1,6 @@
-import {Release} from './AbstractRelease';
+import {MovieRelease} from './MovieRelease';
 
-class DVDRelease extends Release
+class DVDRelease extends MovieRelease
 {
     public regionCode : string[];
 }

@@ -15,7 +15,7 @@ class AbstractSeries extends AbstractMovie
         return "";
     }
 
-    public completeness: string;
+    
 }
 
 export default AbstractSeries;

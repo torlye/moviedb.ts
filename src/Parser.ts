@@ -1,8 +1,13 @@
-import * as Model from './model/Model';
+import * as Model from './model';
 
-function parseSpreadsheetList(list: string[][]) : Model.MovieRelease[]
+interface IParsedJmoviedbEntry {
+    movie: Model.AbstractMovie,
+    release: Model.IRelease
+}
+
+function parseSpreadsheetList(list: string[][]) : IParsedJmoviedbEntry[]
 {
-    const parsedEntries: Model.MovieRelease[] = []
+    const parsedEntries: IParsedJmoviedbEntry[] = []
     
     for(const entry of list)
     {
@@ -16,7 +21,7 @@ function parseSpreadsheetList(list: string[][]) : Model.MovieRelease[]
 }
 
 
-function parseSpreadsheetEntry(entry: string[]) : Model.MovieRelease|null
+function parseSpreadsheetEntry(entry: string[]) : IParsedJmoviedbEntry|null
 {
     //const type = entry[1]
     const [id, type, imdbid, title, altTitle, year, rating, plot, tagline, 
@@ -27,7 +32,7 @@ function parseSpreadsheetEntry(entry: string[]) : Model.MovieRelease|null
     const movie: Model.AbstractMovie|null = getMovieFromType(type);
     if (movie != null)
     {
-        movie.jmoviedbId = parseInt(id, 10);
+        movie.id = parseInt(id, 10);
         movie.imdbUrl = imdbid;
         movie.title = title;
         movie.year = parseInt(year, 10);
@@ -43,17 +48,12 @@ function parseSpreadsheetEntry(entry: string[]) : Model.MovieRelease|null
         movie.director = getCastCrew(directors);
         movie.writer = getCastCrew(writers);
         movie.cast = getCastCrew(actors);
-        movie.version = version;
-    }
-    if (movie instanceof Model.AbstractSeries)
-    {
-        (movie as Model.AbstractSeries).completeness = completeness;
     }
 
-    const release: Model.Release|null = getReleaseFromFormat(format, dvdregion);
+    const release: Model.MovieRelease|null = getReleaseFromFormat(format, dvdregion);
     if (release != null)
     {
-        release.jmoviedbId = parseInt(id, 10);
+        release.id = parseInt(id, 10);
         release.seen = seen === "true";
         release.pirated = unofficial === "true";
         release.color = color;
@@ -67,10 +67,18 @@ function parseSpreadsheetEntry(entry: string[]) : Model.MovieRelease|null
         release.storageMedia = [disc];
         release.audioTracks = getAudioTracks(audio);
         release.subtitleTracks = getSubtitleTracks(subtitles);
+        release.version = version;
+        release.completeness = completeness;
     }
 
     if (movie != null && release != null) {
-        return new Model.MovieRelease(movie, release);
+        return {
+            movie, 
+            release: {
+                id: release.id,
+                movieReleases: [ release ]
+            }
+        };
     }
     return null;
 }
@@ -97,20 +105,33 @@ function getMovieFromType(type: string) : Model.AbstractMovie|null
     return movie;
 }
 
-function getReleaseFromFormat(format: string, dvdregion: string) : Model.Release|null
+function getReleaseFromFormat(format: string, dvdregion: string) : Model.MovieRelease|null
 {
-    let release: Model.Release;
-    if (format === "DVD")
+    let release: Model.MovieRelease;
+    if (format === "DVD"||format === "Blu-ray"||format==="Blu-ray 3D")
     {
-        release = new Model.DVDRelease();
+        const dvdRelease = new Model.DVDRelease();
+        dvdRelease.regionCode = parseRegionCode(dvdregion);
+        
+        release = dvdRelease;
     }
     else
     {
-        release = new Model.Release();
+        release = new Model.MovieRelease();
     }
     release.format = format;
     
     return release;
+}
+
+function parseRegionCode(dvdregion: string): string[] {
+    const codes:string[] = [];
+    if (dvdregion) {
+        for (const code of csvToArray(dvdregion)) {
+            codes.push(code);
+        }
+    }
+    return codes;
 }
 
 function csvToArray(csvString: string) : string[] {

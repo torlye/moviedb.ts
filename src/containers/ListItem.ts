@@ -5,7 +5,7 @@ import * as Model from '../model';
 
 function mapStateToProps(state: Model.IMovieDB, ownProps: IListItemProps) {
     return {
-        movie: getMovieById(state, ownProps.key2)
+        movie: getMovieById(state, ownProps.release.movieReleases[0].movieId)
     };
 }
 

@@ -2,10 +2,6 @@ import {AbstractMovie} from './AbstractMovie';
 
 class Film extends AbstractMovie
 {
-    public get typeForDisplay(): string {
-        return "Film";
-    }
-
     public get yearForDisplay() : string
     {
         if (AbstractMovie.isValidYear(this.year) && AbstractMovie.isValidYear(this.year2))

@@ -3,6 +3,7 @@ import { IAudioTrack, ISubtitleTrack } from './AudioSub';
 export class MovieRelease
 {
     public format: string;
+    public secondaryFormats: string[];
     
     public get video(): string[]
     {

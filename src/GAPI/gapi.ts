@@ -1,4 +1,5 @@
 import IMyWindow from './../windowextensions';
+import * as loghelper from 'src/loghelper';
 declare var window: IMyWindow;
 
 const CLIENT_ID = '43661732061-nce4m8c8pngqe9955diecj6vstk7k9i6.apps.googleusercontent.com';
@@ -53,14 +54,14 @@ function updateSigninStatus(isSignedIn : boolean) {
     if (isSignedIn) {
         const authorizeButton = document.getElementById('authorize_button');
         if (authorizeButton) {
-      authorizeButton.style.display = 'none';
+            authorizeButton.style.display = 'none';
         }
       //signoutButton.style.display = 'block';
       //listMajors();
     } else {
         const authorizeButton = document.getElementById('authorize_button');
         if (authorizeButton) {
-      authorizeButton.style.display = 'block';
+            authorizeButton.style.display = 'block';
         }
       //signoutButton.style.display = 'none';
     }
@@ -95,27 +96,23 @@ function appendPre(message:string) {
 }
 
 function getValues(spreadsheet: string, sheetName: string, range:string,
-  successCallback: (data: string[][]) => void,
-  thisArg: object)
+    successCallback: (data: string[][]) => void,
+    thisArg: object)
 {
-  window.gapi.client.sheets.spreadsheets.values.get({
-    spreadsheetId: spreadsheet,
-    range: sheetName+'!'+range,
-  })
-  .then((response: any) => {
-    //successCallback(response.result.values);
-
-    console.log("got the results "+response.result.values.length);
-    
-    successCallback.apply(thisArg, [response.result.values]);
-  }, (response:any) => {
-    console.error("Failed to get rows");
-  });
+    window.gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: spreadsheet,
+        range: sheetName+'!'+range,
+    })
+    .then((response: any) => {
+        loghelper.log("got the results "+response.result.values.length, loghelper.LOG_INFO);
+        
+        successCallback.apply(thisArg, [response.result.values]);
+    }, (response:any) => {
+        loghelper.log("Failed to get rows", loghelper.LOG_ERROR);
+    });
 }
 
-export function getRows(
-  successCallback: (data: string[][]) => void, 
-  thisArg: object) {
-  getValues('1TkuaGyHUT5yHHvMEDu1rygHoQ4QhrC0he62GvwSt994', 'nocover', 'A2:AH', successCallback, thisArg);
+export function getRows(successCallback: (data: string[][]) => void, thisArg: object) {
+    getValues('1TkuaGyHUT5yHHvMEDu1rygHoQ4QhrC0he62GvwSt994', 'import', 'A2:AI41', successCallback, thisArg);
 }
   

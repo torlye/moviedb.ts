@@ -1,4 +1,5 @@
 import * as Model from './model';
+import * as loghelper from 'src/loghelper';
 
 interface IParsedJmoviedbEntry {
     movie: Model.AbstractMovie,
@@ -27,21 +28,13 @@ function parseSpreadsheetEntry(entry: string[]) : IParsedJmoviedbEntry|null
     const [id, type, imdbid, title, altTitle, year, rating, plot, tagline, 
     color, runtime, version, unofficial, seen, location, format,
     disc, video, dvdregion, tvsystem, scenerelease, videoresolution, videoaspect, container, completeness, year2,
-    country, language, genre, directors, writers, actors, audio, subtitles] = entry;
+    country, language, genre, directors, writers, actors, audio, subtitles, notes] = entry;
 
-    const movie: Model.AbstractMovie|null = getMovieFromType(type);
+    const movie = getMovie(type, id, imdbid, title, altTitle, rating, plot, tagline, runtime, year, year2);
+
+    //const movie: Model.AbstractMovie|null = getMovie(type);
     if (movie != null)
     {
-        movie.id = parseInt(id, 10);
-        movie.imdbUrl = imdbid;
-        movie.title = title;
-        movie.year = parseInt(year, 10);
-        movie.rating = parseFloat(rating);
-        movie.year2 = parseInt(year2, 10);
-        movie.title2 = altTitle;
-        movie.runtime = parseInt(runtime, 10);
-        movie.tagline = tagline;
-        movie.plotoutline = plot;
         movie.country = csvToArray(country);
         movie.language = csvToArray(language);
         movie.genre = csvToArray(genre);
@@ -69,6 +62,7 @@ function parseSpreadsheetEntry(entry: string[]) : IParsedJmoviedbEntry|null
         release.subtitleTracks = getSubtitleTracks(subtitles);
         release.version = version;
         release.completeness = completeness;
+        release.notes = notes;
     }
 
     if (movie != null && release != null) {
@@ -83,25 +77,22 @@ function parseSpreadsheetEntry(entry: string[]) : IParsedJmoviedbEntry|null
     return null;
 }
 
-function getMovieFromType(type: string) : Model.AbstractMovie|null
-{
-    let movie: Model.AbstractMovie;
+function getMovie(type: string, id: string, imdbid: string, title: string, altTitle: string, 
+    rating: string, plot: string, tagline: string, runtime: string, year: string, year2: string) {
+    
+        let movie: Model.AbstractMovie;
 
-    if (type === "Film" || type === "TV Movie" || type === "Direct-to-video movie")
-    {
-        movie = new Model.Film();
+    if (type === "Film" || type === "TV Movie" || type === "Direct-to-video movie") {
+        movie = new Model.Film(parseInt(id, 10), imdbid, title, altTitle, parseFloat(rating), plot, tagline, parseInt(runtime, 10), type, parseInt(year, 10), parseInt(year2, 10));
     }
-    else if (type === "TV series" || type === "TV miniseries" || type === "Movie Serial" || type === "Web series")
-    {
-        movie = new Model.AbstractSeries();
+    else if (type === "TV series" || type === "TV miniseries" || type === "Movie Serial" || type === "Web series") {
+        movie = new Model.Series(parseInt(id, 10), imdbid, title, altTitle, parseFloat(rating), plot, tagline, parseInt(runtime, 10), type, parseInt(year, 10), parseInt(year2, 10));
     }
-    else
-    {
-        console.error("Invalid type "+type);
+    else {
+        loghelper.log("Invalid type " + type, loghelper.LOG_WARN);
         return null;
     }
 
-    movie.type = type;
     return movie;
 }
 
@@ -165,7 +156,7 @@ function getCastCrew(jsonString: string) : Model.ICastCrew[]
         }
         catch (err)
         {
-            console.error(jsonString + "\n" + err);
+            loghelper.log(jsonString + "\n" + err, loghelper.LOG_ERROR);
         }
     }
 
@@ -188,7 +179,7 @@ function getAudioTracks(jsonString: string) : Model.IAudioTrack[]
         catch (err)
         {
             alert(jsonString);
-            console.error(jsonString + "\n" + err);
+            loghelper.log(jsonString + "\n" + err, loghelper.LOG_ERROR);
         }
     }
 
@@ -211,7 +202,7 @@ function getSubtitleTracks(jsonString: string) : Model.ISubtitleTrack[]
         catch (err)
         {
             alert(jsonString);
-            console.error(jsonString + "\n" + err);
+            loghelper.log(jsonString + "\n" + err, loghelper.LOG_ERROR);
         }
     }
 

@@ -4,4 +4,5 @@ export default interface IMyWindow extends Window {
     signoutButton: HTMLElement | null;
     //initClient() : void;
     //handleClientLoad() : void;
+    __MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__: boolean
 }

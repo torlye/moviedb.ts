@@ -4,6 +4,9 @@ import * as GAPI from '../GAPI/gapi';
 import List from '../containers/List';
 import * as Parser from '../Parser';
 import { AbstractMovie, IRelease } from '../model';
+import store from 'src/store';
+import { getMovieById, getMovieByImdbUrl } from 'src/selectors';
+import * as loghelper from 'src/loghelper';
 
 export interface IAppProps
 {
@@ -51,9 +54,24 @@ class App extends React.Component<IAppProps> {
         console.log("data loaded "+data.length);
 
         Parser.default(data).forEach(parsedValue => {
-            this.props.onAddMovie!(parsedValue.movie);
-            this.props.onAddRelease!(parsedValue.release);
+            const {release, movie} = parsedValue;
+            const movieId = this.getOrAddMovie(movie);
+            release.movieReleases[0].movieId = movieId
+            this.props.onAddRelease!(release);
         });
+    }
+
+    private getOrAddMovie(movie:AbstractMovie) {
+        if (movie.imdbUrl) {
+            const existingMovie = getMovieByImdbUrl(store.getState().movies, movie.imdbUrl);
+            if (existingMovie) {
+                loghelper.log("Movie already exists in database "+movie.title+" "+movie.imdbUrl, loghelper.LOG_WARN);
+                return existingMovie.id;
+            }
+        }
+
+        this.props.onAddMovie!(movie);
+        return movie.id;
     }
 }
 

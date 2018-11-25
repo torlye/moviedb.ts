@@ -12,7 +12,7 @@ export type LogLevel = LOG_DEBUG|LOG_INFO|LOG_WARN|LOG_ERROR;
 
 function getCurrentLogLevel() :LogLevel
 {
-    return LOG_DEBUG;
+    return LOG_WARN;
 }
 
 export function log(message: string, level:LogLevel) {

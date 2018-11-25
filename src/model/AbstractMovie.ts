@@ -2,12 +2,12 @@ import {ICastCrew} from './CastCrew';
 
 export abstract class AbstractMovie
 {
-    protected static isValidYear(year: number) : boolean
+    public static isValidYear(year: number) : boolean
     {
         return !isNaN(year) && Number.isFinite(year) && Number.isInteger(year) && year > 1800 && year < 2100;
     }
 
-    private static isValidRating(rating: number) : boolean
+    public static isValidRating(rating: number) : boolean
     {
         return !isNaN(rating) && Number.isFinite(rating) && rating > 0 && rating <= 10;
     }
@@ -27,58 +27,37 @@ export abstract class AbstractMovie
     public writer: ICastCrew[];
     public director: ICastCrew[];
     public type: string;
+    public year: number;
+    public year2: number;
+
+    public constructor(id: number, imdbUrl: string, title: string, title2: string, imdbrating: number, plotoutline:string,
+        tagline:string, runtime:number, type:string, year:number, year2: number) {
+        this.id = id;
+        this.imdbUrl = imdbUrl;
+        this.title = title;
+        this.title2 = title2;
+        if (AbstractMovie.isValidRating(imdbrating)) {
+            this.imdbrating = imdbrating;
+        }
+        this.plotoutline = plotoutline;
+        this.tagline = tagline;
+        this.runtime = runtime;
+        this.type = type;
+        if (AbstractMovie.isValidYear(year)) {
+            this.year = year;
+        }
+        if (AbstractMovie.isValidYear(year2)) {
+            this.year2 = year2;
+        }
+    }
 
     public abstract get yearForDisplay() : string;
-    //public abstract get typeForDisplay() : string;
+    
     public get ratingForDisplay()
     {
-        if (this.rating){
-            return this.rating.toFixed(1);
+        if (this.imdbrating){
+            return this.imdbrating.toFixed(1);
         }
         return "";
     }
-
-    public get year() : number
-    {
-        return this.yearPrivate;
-    }
-
-    public set year(newValue: number)
-    {
-        if (AbstractMovie.isValidYear(newValue))
-        {
-            this.yearPrivate = newValue;
-        }
-    }
-
-    public get year2() : number
-    {
-        return this.year2Private;
-    }
-
-    public set year2(newValue: number)
-    {
-        if (AbstractMovie.isValidYear(newValue))
-        {
-            this.year2Private = newValue;
-        }
-    }
-
-    public get rating() : number
-    {
-        return this.ratingPrivate;
-    }
-
-    public set rating(newValue: number)
-    {
-        if (AbstractMovie.isValidRating(newValue))
-        {
-            this.ratingPrivate = newValue;
-        }
-    }
-
-
-    private yearPrivate: number;
-    private year2Private: number;
-    private ratingPrivate: number;
 }

@@ -1,5 +1,5 @@
 import IMyWindow from './../windowextensions';
-import * as loghelper from 'src/loghelper';
+import * as loghelper from '../loghelper';
 declare var window: IMyWindow;
 
 const CLIENT_ID = '43661732061-nce4m8c8pngqe9955diecj6vstk7k9i6.apps.googleusercontent.com';

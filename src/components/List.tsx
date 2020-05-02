@@ -7,14 +7,16 @@ export interface IListProps {
     releases?: Model.IReleasesCollection
 }
 
-class List extends React.Component<IListProps> {
-    public render() {
-        const releases = this.props.releases;
-        if (!releases) {
+const List: React.FunctionComponent<IListProps> = 
+    (props: IListProps) => {
+        if (!props.releases) {
             throw new Error("No releases");
         }
+        
+        console.log(props.releases.length + " releases");
 
-        const listItems = releases.map((value) => {
+
+        const listItems = props.releases.map((value) => {
             return <ListItem 
                 key={value.id} key2={value.id} release={value} />
         });
@@ -27,7 +29,6 @@ class List extends React.Component<IListProps> {
         return (
             <MList>{listItems}</MList>
         );
-    }
-}
+    };
 
 export default List;

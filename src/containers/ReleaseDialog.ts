@@ -1,7 +1,7 @@
-import ReleaseDialog, { IReleaseDialogProps } from 'src/components/ReleaseDialog';
+import ReleaseDialog, { IReleaseDialogProps } from '../components/ReleaseDialog';
 import { connect } from 'react-redux';
 import * as Model from '../model';
-import { getValidVideoFormats } from 'src/selectors';
+import { getValidVideoFormats } from '../selectors';
 
 function mapStateToProps(state: Model.IMovieDB, ownProps: IReleaseDialogProps) {
     return {

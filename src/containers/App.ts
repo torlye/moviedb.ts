@@ -4,12 +4,12 @@ import App, { IAppProps } from '../components/App';
 import * as actions from '../actions';
 import { AbstractMovie, IRelease } from '../model';
 import { IAddMovie } from '../actions/moviesActions';
-import { IAddRelease } from '../actions/releasesActions';
+import { IAddRelease, IAddReleases } from '../actions/releasesActions';
 
-export function mapDispatchToProps(dispatch: Dispatch<IAddMovie|IAddRelease>): IAppProps {
+export function mapDispatchToProps(dispatch: Dispatch<IAddMovie|IAddRelease|IAddReleases>): IAppProps {
     return {
         onAddMovie: (content: AbstractMovie) => dispatch(actions.addMovie(content)),
-        onAddRelease: (content: IRelease) => dispatch(actions.addRelease(content)),
+        onAddRelease: (content: IRelease[]) => dispatch(actions.addReleases(content)),
     }
 }
 

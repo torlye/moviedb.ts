@@ -1,5 +1,5 @@
 import { IMovieDB } from '../model';
-import { IMoviesCollection } from 'src/model/MovieList';
+import { IMoviesCollection } from '../model/MovieList';
 
 export function getMovies(store: IMovieDB) {
     return store.movies;

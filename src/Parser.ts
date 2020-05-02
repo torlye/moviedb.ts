@@ -1,5 +1,5 @@
 import * as Model from './model';
-import * as loghelper from 'src/loghelper';
+import * as loghelper from './loghelper';
 
 interface IParsedJmoviedbEntry {
     movie: Model.AbstractMovie,
@@ -43,11 +43,16 @@ function parseSpreadsheetEntry(entry: string[]) : IParsedJmoviedbEntry|null
         movie.cast = getCastCrew(actors);
     }
 
-    const release: Model.MovieRelease|null = getReleaseFromFormat(format, dvdregion);
+    const release: Model.MovieRelease|null = getReleaseFromFormat(format, {
+        id: parseInt(id, 10),
+        movieId: -1,
+        seen: seen === 'true',
+        dvdregion
+    });
     if (release != null)
     {
-        release.id = parseInt(id, 10);
-        release.seen = seen === "true";
+        //release.id = parseInt(id, 10);
+        //release.seen = seen === "true";
         release.pirated = unofficial === "true";
         release.color = color;
         release.resolution = [videoresolution];
@@ -96,19 +101,24 @@ function getMovie(type: string, id: string, imdbid: string, title: string, altTi
     return movie;
 }
 
-function getReleaseFromFormat(format: string, dvdregion: string) : Model.MovieRelease|null
+function getReleaseFromFormat(format: string, p: {
+    id: number,
+    movieId: number,
+    seen: boolean,
+    dvdregion: string
+}) : Model.MovieRelease|null
 {
     let release: Model.MovieRelease;
     if (format === "DVD"||format === "Blu-ray"||format==="Blu-ray 3D")
     {
-        const dvdRelease = new Model.DVDRelease();
-        dvdRelease.regionCode = parseRegionCode(dvdregion);
+        const dvdRelease = new Model.DVDRelease(p.id, p.movieId, p.seen);
+        dvdRelease.regionCode = parseRegionCode(p.dvdregion);
         
         release = dvdRelease;
     }
     else
     {
-        release = new Model.MovieRelease();
+        release = new Model.MovieRelease(p.id, p.movieId, p.seen);
     }
     release.format = format;
     

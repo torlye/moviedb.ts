@@ -2,8 +2,8 @@ import * as React from 'react';
 import { IListItemProps } from './ListItem';
 import { Dialog, DialogTitle, DialogContent, FormControl, InputLabel, Select, MenuItem, Input, TextField } from '@material-ui/core';
 import * as Model from '../model';
-import store from 'src/store';
-import { getValidVideoFormats } from 'src/selectors';
+import store from '../store';
+import { getValidVideoFormats } from '../selectors';
 
 export interface IReleaseDialogProps
 {

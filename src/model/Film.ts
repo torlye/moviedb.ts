@@ -10,7 +10,7 @@ class Film extends AbstractMovie
         }
         if (AbstractMovie.isValidYear(this.year))
         {
-            return this.year.toString();
+            return this.year!.toString();
         }
         return "";
     }

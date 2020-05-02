@@ -1,7 +1,7 @@
-import { ReleasesAction, IAddRelease } from 'src/actions/releasesActions';
-import { ADD_RELEASE } from 'src/actions/actionTypes';
-import { IEnums, IRelease } from 'src/model/MovieList';
-import { MovieRelease } from 'src/model';
+import { ReleasesAction, IAddRelease } from '../actions/releasesActions';
+import { ADD_RELEASE } from '../actions/actionTypes';
+import { IEnums, IRelease } from '../model/MovieList';
+import { MovieRelease } from '../model';
 
 const initialState: IEnums = {
     containerFormats: [],
@@ -14,7 +14,7 @@ export default function enums(state:IEnums = initialState, action: ReleasesActio
         case ADD_RELEASE: {
             registerNewFormats(state, "videoFormats", action.payload.movieReleases, (acc: string[], mr) => acc.concat(mr.video));
             registerNewFormats(state, "containerFormats", action.payload.movieReleases, (acc: string[], mr) => acc.concat(mr.containerformat));
-            registerNewFormats(state, "formatTypes", action.payload.movieReleases, (acc: string[], mr) => acc.concat(mr.format));
+            registerNewFormats(state, "formatTypes", action.payload.movieReleases, (acc: string[], mr) => acc.concat(mr.allFormats));
             return state;
         }
         default:

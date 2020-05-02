@@ -4,14 +4,14 @@ import * as GAPI from '../GAPI/gapi';
 import List from '../containers/List';
 import * as Parser from '../Parser';
 import { AbstractMovie, IRelease } from '../model';
-import store from 'src/store';
-import { getMovieById, getMovieByImdbUrl } from 'src/selectors';
-import * as loghelper from 'src/loghelper';
+import store from '../store';
+import { getMovieById, getMovieByImdbUrl } from '../selectors';
+import * as loghelper from '../loghelper';
 
 export interface IAppProps
 {
     onAddMovie?: (content: AbstractMovie) => void;
-    onAddRelease?: (content: IRelease) => void;
+    onAddRelease?: (content: IRelease[]) => void;
 }
 
 class App extends React.Component<IAppProps> {
@@ -53,12 +53,15 @@ class App extends React.Component<IAppProps> {
         console.log("setData invoked");
         console.log("data loaded "+data.length);
 
-        Parser.default(data).forEach(parsedValue => {
+        const parsedReleases = Parser.default(data).map(parsedValue => {
             const {release, movie} = parsedValue;
             const movieId = this.getOrAddMovie(movie);
             release.movieReleases[0].movieId = movieId
-            this.props.onAddRelease!(release);
+            //this.props.onAddRelease!(release);
+            return release;
         });
+
+        this.props.onAddRelease!(parsedReleases);
     }
 
     private getOrAddMovie(movie:AbstractMovie) {

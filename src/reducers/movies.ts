@@ -1,8 +1,8 @@
 import { IMoviesCollection } from '../model/MovieList';
 import { MoviesAction } from '../actions/moviesActions';
 import { ADD_MOVIE } from '../actions/actionTypes';
-import { getMovieByImdbUrl } from 'src/selectors';
-import * as loghelper from 'src/loghelper';
+import { getMovieByImdbUrl } from '../selectors';
+import * as loghelper from '../loghelper';
 
 const initialState: IMoviesCollection = [];
 

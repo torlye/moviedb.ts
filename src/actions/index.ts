@@ -1,4 +1,4 @@
 import {addMovie} from './moviesActions';
-import {addRelease} from './releasesActions';
+import {addRelease, addReleases} from './releasesActions';
 
-export {addMovie, addRelease};
+export {addMovie, addRelease, addReleases};

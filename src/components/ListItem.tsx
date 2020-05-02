@@ -12,19 +12,19 @@ export interface IListItemProps {
     isDialogOpen?: boolean
 }
 
-class ListItem extends React.Component<IListItemProps> {
-    public render() {
-        const release = this.props.release.movieReleases[0];
-        const movie = this.props.movie;
+const ListItem: React.FunctionComponent<IListItemProps> =
+    (props: IListItemProps) => {
+        const release = props.release.movieReleases[0];
+        const movie = props.movie;
         if (!movie) {
             throw new Error("Missing movie");
         }
         
-        const isOpen = this.props.key2 === 1 ? true : false;
+        const isOpen = false;
 
         return (
             <>
-            <MListItem button={true} onClick={this.handleClickOpen}>
+            <MListItem button={true} onClick={handleClickOpen}>
                 <ListItemText primary={movie.title+" ("+movie.yearForDisplay+")"} secondary={release.format} />
             </MListItem>
             <ReleaseDialog isOpen={isOpen} release={release} movie={movie} />
@@ -32,7 +32,7 @@ class ListItem extends React.Component<IListItemProps> {
         );
 
         // return (
-        //     <li key={this.props.key2}>
+        //     <li key={props.key2}>
         //       <div><h1>{movie.title+" ("+movie.yearForDisplay+")"}</h1></div>
         //       <div>{movie.title2}</div>
               
@@ -73,14 +73,13 @@ class ListItem extends React.Component<IListItemProps> {
         // );
     }
 
-    private handleClickOpen = () => {
-        this.setState((prevState, props) => {
-            return {
-                ...prevState,
-                "isDialogOpen": true
-            }
-        });
-    };
-}
+const handleClickOpen = () => {
+    // setState((prevState, props) => {
+    //     return {
+    //         ...prevState,
+    //         "isDialogOpen": true
+    //     }
+    // });
+};
 
 export default ListItem;

@@ -9,5 +9,7 @@ import {AbstractMovie} from './AbstractMovie';
 import {IRelease, IReleasesCollection, IMovieDB} from './MovieList';
 
 export {MovieRelease, Series, DVDRelease, File, AbstractMovie,
-Film, ICastCrew, IAudioTrack, ISubtitleTrack, IRelease, 
+Film}
+
+export type {ICastCrew, IAudioTrack, ISubtitleTrack, IRelease, 
 IReleasesCollection, IMovieDB}
